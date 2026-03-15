@@ -10,7 +10,7 @@ If you want the fastest path, do this:
 
 1. Copy this template into your working project.
 2. Open [`docs/reference/EASY_MODE_SETUP_PROMPT.md`](docs/reference/EASY_MODE_SETUP_PROMPT.md).
-3. Paste the prompt into Gemini or Codex.
+3. Paste the prompt into Gemini (or Codex).
 4. Let the agent adapt the harness to your real repo structure, test commands, and docs.
 
 This is the intended quick-start path for most people. The manual startup procedure is still documented below when you want tighter control.
