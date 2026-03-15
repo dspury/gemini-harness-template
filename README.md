@@ -1,17 +1,13 @@
 # Gemini Harness Template
 
-A structured, file-based harness for executing software tasks with Gemini CLI while remaining legible to AGENTS-based tooling such as Codex-style harnesses.
+A Gemini-first, file-based harness for structured software work.
 
-This template is designed for teams that want:
-- explicit task planning artifacts
-- local, file-based execution state
-- lightweight Python utilities instead of orchestration services
-- a Gemini-first setup that still works with `AGENTS.md`-oriented workflows
+It keeps task definition, execution, validation, and review state in the repository instead of hidden agent memory or external services. The template also stays compatible with `AGENTS.md`-oriented tooling such as Codex-style harnesses.
 
-## What This Template Includes
+## What You Get
 
 - `GEMINI.md` as the primary Gemini workspace instruction file
-- `AGENTS.md` as a compatibility map for Codex-style and other AGENTS-aware tools
+- `AGENTS.md` as a compatibility map for AGENTS-aware tools
 - `docs/briefs/` for task briefs
 - `docs/exec-plans/` for execution plans
 - `.harness/tasks/` for active task packets
@@ -19,17 +15,9 @@ This template is designed for teams that want:
 - `.harness/episodes/` for completion summaries
 - `src/` for small harness utilities
 - `tests/` for local validation
-- `LICENSE` for explicit open-source terms
+- `LICENSE` with MIT terms
 
-## Why This Structure
-
-The template leans into the strengths of each platform:
-- Gemini strength: `GEMINI.md`, workspace configuration, hierarchical context, and `/memory show`
-- Codex strength: `AGENTS.md` as a short map into a durable docs tree
-
-The harness code stays platform-neutral. Platform-specific behavior lives in the root instruction files and workspace config.
-
-## Setup
+## Quick Start
 
 1. Copy this folder to your new project location.
 2. Ensure Python 3 is installed.
@@ -40,58 +28,36 @@ The harness code stays platform-neutral. Platform-specific behavior lives in the
 python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
-5. If you use Gemini CLI, keep the included workspace settings file at `.gemini/settings.json`. It preserves the official default `GEMINI.md` entry point and also allows Gemini to load `AGENTS.md`.
+5. If you use Gemini CLI, keep `.gemini/settings.json` in place. It preserves the official `GEMINI.md` entry point and also allows Gemini to load `AGENTS.md`.
 
-## Quick Start
+## Task Loop
 
-1. Copy `docs/briefs/BRIEF_TEMPLATE.md` to a task-specific brief.
-2. Copy `docs/exec-plans/EXEC_PLAN_TEMPLATE.md` to a task-specific execution plan.
-3. Copy `.harness/tasks/TASK_TEMPLATE.json` to a task-specific packet in `.harness/tasks/`.
-4. Ask Gemini to work from that task packet and the referenced brief and plan.
-5. Run the smallest meaningful local validation command.
-6. Record the validation attempt in `.harness/runs/`.
-7. Record task completion in `.harness/episodes/`.
+### 1. Create the brief
 
-## Official Platform Position
+Copy `docs/briefs/BRIEF_TEMPLATE.md` to a task-specific brief.
 
-- Official Gemini CLI documentation uses `GEMINI.md` as the default context filename.
-- Official Gemini CLI documentation also allows alternate or additional filenames through `context.fileName`, so `AGENTS.md` can be loaded too.
-- OpenAI's published Codex harness guidance centers `AGENTS.md` as a short repo map and recommends keeping deeper knowledge in `docs/`.
-
-This template adopts both patterns:
-- Gemini-first behavior through `GEMINI.md`
-- Codex-friendly compatibility through `AGENTS.md`
-- deeper operational detail in `docs/` instead of large root instruction files
-
-## Task Workflow
-
-### 1. Write the brief
-
-Create a file in `docs/briefs/` from `docs/briefs/BRIEF_TEMPLATE.md`.
-
-The brief should define:
-- the smallest concrete outcome
-- why it matters in this repo
-- in-scope work
-- out-of-scope work
+The brief should capture:
+- the target outcome
+- why it matters
+- scope and non-scope
 - acceptance criteria
 
-### 2. Write the execution plan
+### 2. Create the execution plan
 
-Create a file in `docs/exec-plans/` from `docs/exec-plans/EXEC_PLAN_TEMPLATE.md`.
+Copy `docs/exec-plans/EXEC_PLAN_TEMPLATE.md` to a task-specific plan.
 
-The plan should define:
+The plan should capture:
 - the implementation approach
-- expected files to modify
+- likely files to change
 - validation commands
-- risks and mitigations
+- key risks
 - completion criteria
 
 ### 3. Create the task packet
 
-Create a JSON packet in `.harness/tasks/` from `.harness/tasks/TASK_TEMPLATE.json`.
+Copy `.harness/tasks/TASK_TEMPLATE.json` to a task-specific packet in `.harness/tasks/`.
 
-The packet links the task ID, title, brief, and plan so the task can be picked up reproducibly by an agent or operator.
+The packet ties together the task ID, brief, and plan so the work can be picked up reproducibly.
 
 ### 4. Execute the task
 
@@ -100,9 +66,9 @@ Ask Gemini to read:
 - `AGENTS.md`
 - the task packet
 - the referenced brief
-- the referenced execution plan
+- the referenced plan
 
-Then implement the smallest viable change needed to satisfy the task.
+Then implement the smallest viable change that satisfies the task.
 
 ### 5. Validate locally
 
@@ -112,9 +78,9 @@ Start with the smallest meaningful command. For the harness itself, use:
 python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
-If your copied project has additional app code, prefer the narrowest repo-defined test command that proves the change.
+If you copy this template into a larger project, prefer the narrowest repo-defined command that proves the change.
 
-### 6. Log the run
+### 6. Record the run
 
 After a meaningful validation attempt, write a run record:
 
@@ -122,9 +88,9 @@ After a meaningful validation attempt, write a run record:
 python3 -c "from src.run_log_writer import write_run_record; write_run_record({'run_id': 'run-example', 'task_id': 'task-000', 'status': 'passed', 'tests_run': ['python3 -m unittest discover -s tests -p test_*.py'], 'files_changed': ['README.md'], 'summary': 'Release readiness validation'})"
 ```
 
-If the base filename already exists, the writer preserves history by creating the next available suffixed file such as `run-task-000-2.json`.
+Run records are append-safe. If `run-task-000.json` already exists, the writer creates `run-task-000-2.json`, `run-task-000-3.json`, and so on.
 
-### 7. Log completion
+### 7. Record completion
 
 When the task is complete and verified, write an episode record:
 
@@ -132,13 +98,15 @@ When the task is complete and verified, write an episode record:
 python3 -c "from src.episode_log_writer import write_episode_record; write_episode_record({'episode_id': 'episode-example', 'task_id': 'task-000', 'result': 'completed', 'lesson': 'Keep workspace instructions short and move durable detail into docs.'})"
 ```
 
-Episode records use the same append-safe naming rule, for example `episode-task-000-2.json`.
+Episode records use the same append-safe naming rule.
 
-## Gemini Notes
+## Key Files
 
-- Gemini can inspect the effective merged context with `/memory show`.
-- If `AGENTS.md` does not appear in Gemini's effective context, verify that the workspace is trusted and `.gemini/settings.json` is being applied.
-- Keep `GEMINI.md` short. Gemini supports hierarchical context loading and imported Markdown, so deeper guidance belongs in `docs/`.
+- `GEMINI.md`: Gemini-first workspace instructions
+- `AGENTS.md`: compatibility map for AGENTS-aware tools
+- `ARCHITECTURE.md`: stable repo structure and constraints
+- `docs/reference/PLATFORM_NOTES.md`: verified Gemini and Codex platform notes
+- `.gemini/settings.json`: Gemini workspace configuration
 
 ## Repository Layout
 
@@ -153,6 +121,7 @@ Episode records use the same append-safe naming rule, for example `episode-task-
 |-- ARCHITECTURE.md
 |-- GEMINI.md
 |-- README.md
+|-- LICENSE
 |-- docs/
 |   |-- briefs/
 |   |-- exec-plans/
@@ -161,25 +130,24 @@ Episode records use the same append-safe naming rule, for example `episode-task-
 `-- tests/
 ```
 
-## Components
+## Platform Notes
 
-- `GEMINI.md`: Gemini-first workspace instructions.
-- `AGENTS.md`: compatibility map for AGENTS-aware tools.
-- `docs/`: briefs, plans, and reference notes.
-- `.harness/`: task metadata, run logs, and episode summaries.
-- `src/`: harness utilities such as log writers and validators.
-- `tests/`: validation for the harness utilities.
+- Gemini CLI officially uses `GEMINI.md` as the default context filename.
+- Gemini CLI can also load alternate or additional filenames through `context.fileName`, which is why this template carries `AGENTS.md` too.
+- OpenAI's published Codex harness guidance uses `AGENTS.md` as a short repo map and pushes deeper operational detail into `docs/`.
 
-## Philosophy
+This template follows that split:
+- Gemini-first behavior through `GEMINI.md`
+- Codex-friendly compatibility through `AGENTS.md`
+- durable detail in `docs/` instead of large root instruction files
 
-- File-based: everything important is visible in the repository.
-- Deterministic: local utilities use predictable inputs and filenames.
-- Auditable: task, run, and episode artifacts preserve prior records instead of silently overwriting them.
-- Platform-aware: harness code stays neutral, while instruction files and docs lean into each agent platform's strengths.
+## Gemini Tips
+
+- Use `/memory show` to inspect Gemini's effective merged context.
+- If `AGENTS.md` does not appear in Gemini's context, confirm the workspace is trusted and `.gemini/settings.json` is being applied.
+- Keep `GEMINI.md` short. Use `docs/` for durable detail.
 
 ## Release Notes
 
-- Official source references for Gemini and Codex platform behavior are collected in `docs/reference/PLATFORM_NOTES.md`.
-- `.gemini/settings.json` is included as a convenience for Gemini CLI users, but the template still works if a user relies only on `GEMINI.md`.
 - The harness utilities use Python standard library modules only.
 - The project is released under the MIT License.
