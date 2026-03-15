@@ -4,6 +4,17 @@ A Gemini-first, file-based harness for structured software work.
 
 It keeps task definition, execution, validation, and review state in the repository instead of hidden agent memory or external services. The template also stays compatible with `AGENTS.md`-oriented tooling such as Codex-style harnesses.
 
+## Easy Mode
+
+If you want the fastest path, do this:
+
+1. Copy this template into your working project.
+2. Open [`docs/reference/EASY_MODE_SETUP_PROMPT.md`](docs/reference/EASY_MODE_SETUP_PROMPT.md).
+3. Paste the prompt into Gemini or Codex.
+4. Let the agent adapt the harness to your real repo structure, test commands, and docs.
+
+This is the intended quick-start path for most people. The manual startup procedure is still documented below when you want tighter control.
+
 ## What You Get
 
 - `GEMINI.md` as the primary Gemini workspace instruction file
@@ -17,7 +28,7 @@ It keeps task definition, execution, validation, and review state in the reposit
 - `tests/` for local validation
 - `LICENSE` with MIT terms
 
-## Quick Start
+## Manual Setup
 
 1. Copy this folder to your new project location.
 2. Ensure Python 3 is installed.
@@ -105,6 +116,7 @@ Episode records use the same append-safe naming rule.
 - `GEMINI.md`: Gemini-first workspace instructions
 - `AGENTS.md`: compatibility map for AGENTS-aware tools
 - `ARCHITECTURE.md`: stable repo structure and constraints
+- `docs/reference/EASY_MODE_SETUP_PROMPT.md`: copy-paste setup prompt for adapting the harness inside a real repo
 - `docs/reference/PLATFORM_NOTES.md`: verified Gemini and Codex platform notes
 - `.gemini/settings.json`: Gemini workspace configuration
 
