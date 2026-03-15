@@ -161,5 +161,6 @@ This template follows that split:
 
 ## Release Notes
 
+- The public docs surface is intentionally small. Durable guidance lives in `README.md`, `GEMINI.md`, `AGENTS.md`, `ARCHITECTURE.md`, and `docs/reference/`.
 - The harness utilities use Python standard library modules only.
 - The project is released under the MIT License.

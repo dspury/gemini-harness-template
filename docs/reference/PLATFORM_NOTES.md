@@ -45,6 +45,7 @@ This template leans into Codex-style harness strengths by:
 
 - Do not duplicate large policy blocks in both `GEMINI.md` and `AGENTS.md`.
 - Keep root instruction files short and move deeper operational detail into `docs/`.
+- Keep the public docs surface intentionally small; do not add a `docs/generated/` layer unless the generated artifacts are durable and actually worth publishing.
 - Treat `.gemini/settings.json` as optional convenience, not the only way the harness works.
 - Prefer platform-neutral harness code; reserve platform-specific differences for docs and root instruction files.
 - Preserve append-only audit trails in `.harness/runs/` and `.harness/episodes/`; do not design writers that overwrite earlier records with the same base identifier.
