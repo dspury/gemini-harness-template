@@ -1,0 +1,10 @@
+{
+  "task_id": "task-000",
+  "title": "Short task title",
+  "status": "ready",
+  "brief": "docs/briefs/BRIEF_TEMPLATE.md",
+  "plan": "docs/exec-plans/EXEC_PLAN_TEMPLATE.md",
+  "priority": "medium",
+  "type": "feature",
+  "created_at": "YYYY-MM-DD"
+}
