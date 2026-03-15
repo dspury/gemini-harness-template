@@ -62,6 +62,25 @@ class WriteRunRecordTests(unittest.TestCase):
             self.assertTrue(runs_dir.is_dir())
             self.assertEqual(written_path, runs_dir / "run-task-001.json")
 
+    def test_preserves_existing_records_by_allocating_a_suffix(self) -> None:
+        first_payload = {"task_id": "task-001", "status": "running"}
+        second_payload = {"task_id": "task-001", "status": "passed"}
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            first_path = write_run_record(first_payload, runs_dir=temp_dir)
+            second_path = write_run_record(second_payload, runs_dir=temp_dir)
+
+            self.assertEqual(first_path, Path(temp_dir) / "run-task-001.json")
+            self.assertEqual(second_path, Path(temp_dir) / "run-task-001-2.json")
+            self.assertEqual(
+                json.loads(first_path.read_text(encoding="utf-8")),
+                first_payload,
+            )
+            self.assertEqual(
+                json.loads(second_path.read_text(encoding="utf-8")),
+                second_payload,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

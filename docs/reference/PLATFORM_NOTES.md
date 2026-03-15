@@ -47,3 +47,4 @@ This template leans into Codex-style harness strengths by:
 - Keep root instruction files short and move deeper operational detail into `docs/`.
 - Treat `.gemini/settings.json` as optional convenience, not the only way the harness works.
 - Prefer platform-neutral harness code; reserve platform-specific differences for docs and root instruction files.
+- Preserve append-only audit trails in `.harness/runs/` and `.harness/episodes/`; do not design writers that overwrite earlier records with the same base identifier.

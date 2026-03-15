@@ -30,7 +30,7 @@ def write_episode_record(
     target_dir = Path(episodes_dir) if episodes_dir is not None else DEFAULT_EPISODES_DIR
     target_dir.mkdir(parents=True, exist_ok=True)
 
-    target_path = target_dir / build_episode_filename(payload)
+    target_path = _select_available_path(target_dir, build_episode_filename(payload))
     target_path.write_text(
         json.dumps(dict(payload), indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
@@ -52,3 +52,19 @@ def _slugify(value: str) -> str:
     normalized = value.strip().lower()
     slug = re.sub(r"[^a-z0-9]+", "-", normalized)
     return slug.strip("-")
+
+
+def _select_available_path(target_dir: Path, filename: str) -> Path:
+    candidate = target_dir / filename
+    if not candidate.exists():
+        return candidate
+
+    stem = candidate.stem
+    suffix = candidate.suffix
+    attempt = 2
+
+    while True:
+        candidate = target_dir / f"{stem}-{attempt}{suffix}"
+        if not candidate.exists():
+            return candidate
+        attempt += 1

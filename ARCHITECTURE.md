@@ -33,6 +33,7 @@ This template is a Gemini-first harness for AI-assisted development. It keeps pl
 - No external database, queue, or service dependency for harness tracking.
 - Keep root instruction files short; treat `docs/` as the deeper system of record.
 - Prefer platform differences in configuration and docs over branching harness code.
+- Run and episode writers derive a stable base filename and allocate numeric suffixes on collision so prior records remain intact.
 
 ## Platform Design
 

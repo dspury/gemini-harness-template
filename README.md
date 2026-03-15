@@ -19,6 +19,7 @@ This template is designed for teams that want:
 - `.harness/episodes/` for completion summaries
 - `src/` for small harness utilities
 - `tests/` for local validation
+- `LICENSE` for explicit open-source terms
 
 ## Why This Structure
 
@@ -121,6 +122,8 @@ After a meaningful validation attempt, write a run record:
 python3 -c "from src.run_log_writer import write_run_record; write_run_record({'run_id': 'run-example', 'task_id': 'task-000', 'status': 'passed', 'tests_run': ['python3 -m unittest discover -s tests -p test_*.py'], 'files_changed': ['README.md'], 'summary': 'Release readiness validation'})"
 ```
 
+If the base filename already exists, the writer preserves history by creating the next available suffixed file such as `run-task-000-2.json`.
+
 ### 7. Log completion
 
 When the task is complete and verified, write an episode record:
@@ -128,6 +131,8 @@ When the task is complete and verified, write an episode record:
 ```bash
 python3 -c "from src.episode_log_writer import write_episode_record; write_episode_record({'episode_id': 'episode-example', 'task_id': 'task-000', 'result': 'completed', 'lesson': 'Keep workspace instructions short and move durable detail into docs.'})"
 ```
+
+Episode records use the same append-safe naming rule, for example `episode-task-000-2.json`.
 
 ## Gemini Notes
 
@@ -169,7 +174,7 @@ python3 -c "from src.episode_log_writer import write_episode_record; write_episo
 
 - File-based: everything important is visible in the repository.
 - Deterministic: local utilities use predictable inputs and filenames.
-- Auditable: task, run, and episode artifacts make work reviewable.
+- Auditable: task, run, and episode artifacts preserve prior records instead of silently overwriting them.
 - Platform-aware: harness code stays neutral, while instruction files and docs lean into each agent platform's strengths.
 
 ## Release Notes
@@ -177,3 +182,4 @@ python3 -c "from src.episode_log_writer import write_episode_record; write_episo
 - Official source references for Gemini and Codex platform behavior are collected in `docs/reference/PLATFORM_NOTES.md`.
 - `.gemini/settings.json` is included as a convenience for Gemini CLI users, but the template still works if a user relies only on `GEMINI.md`.
 - The harness utilities use Python standard library modules only.
+- The project is released under the MIT License.
