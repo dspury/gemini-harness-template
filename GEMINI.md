@@ -1,41 +1,34 @@
-# Gemini Harness System Instructions
+# Gemini Research Harness
 
-You are operating inside a Gemini-first, file-based harness for structured software work.
+You are operating inside a Gemini-first, research-oriented harness.
 
 ## Operating Model
-- Follow the task loop: Brief -> Plan -> Task Packet -> Implementation -> Validation -> Run Record -> Episode Record.
-- Keep state in repository files. Do not rely on unstated session memory for task tracking.
-- Keep changes narrow and deterministic. Avoid broad framework changes unless the task explicitly asks for them.
 
-## Instruction Map
-- `README.md`: operator setup and daily workflow
-- `ARCHITECTURE.md`: stable repo structure and constraints
-- `AGENTS.md`: cross-agent compatibility map
-- `docs/reference/PLATFORM_NOTES.md`: verified Gemini and Codex platform differences
+- Use `GEMINI.md` as the primary instruction surface.
+- Read `ARCHITECTURE.md` before changing the harness structure.
+- Keep work local, file-based, and easy to audit.
+- Store durable research findings in `research/*.md`, not only in chat.
+- Keep scope narrow and prefer small, observable changes.
 
-## Task Workflow
+## Workflow
 
-### 1. Define the task
-- Read or create a brief in `docs/briefs/` from `docs/briefs/BRIEF_TEMPLATE.md`.
-- Read or create an execution plan in `docs/exec-plans/` from `docs/exec-plans/EXEC_PLAN_TEMPLATE.md`.
-- Read or create a task packet in `.harness/tasks/` from `.harness/tasks/TASK_TEMPLATE.json`.
+1. Read or create a brief in `docs/briefs/`.
+2. Read or create a plan in `docs/plans/`.
+3. Create or update a task packet in `.harness/tasks/` when the work needs structured tracking.
+4. Gather evidence from the repo and approved external sources.
+5. Write the findings, citations, open questions, and recommendations to `research/*.md`.
+6. Record the run in `.harness/runs/`.
 
-### 2. Implement
-- Map only the relevant files.
-- Make the smallest viable change in `src/` or the target project surface.
-- Do not modify the harness infrastructure unless the task is about the harness itself.
+## Research Rules
 
-### 3. Validate
-- Run the smallest meaningful local test first.
-- Default command: `python3 -m unittest discover -s tests -p 'test_*.py'`
-- Name the exact validation command before claiming success.
+- Prefer one research question or topic per Markdown file.
+- Name files so they sort cleanly, for example `YYYY-MM-DD-topic.md`.
+- Separate evidence from inference.
+- Cite sources clearly enough that another agent can verify them.
+- If the answer is uncertain, say what is unknown and what would resolve it.
 
-### 4. Record
-- After each significant validation attempt, write a run record in `.harness/runs/`.
-- When the task is complete and verified, write an episode record in `.harness/episodes/`.
+## Validation
 
-## Gemini-Specific Notes
-- `GEMINI.md` is the primary Gemini context file in this template.
-- `.gemini/settings.json` also allows Gemini to load `AGENTS.md` for cross-agent compatibility.
-- If you need to inspect the effective merged context, use `/memory show`.
-- If local context files or settings do not seem active, confirm the workspace trust state in Gemini CLI.
+- Run the smallest meaningful validation for the change.
+- Name the exact command or inspection used before claiming completion.
+- If no executable validation exists, say that directly and state what was reviewed instead.

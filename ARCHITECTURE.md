@@ -1,42 +1,40 @@
 # Architecture
 
 ## Overview
-This template is a Gemini-first harness for AI-assisted development. It keeps planning, execution, and review state in repository files and avoids service-side orchestration.
 
-## Core Components
+This template is a Gemini-first research harness. It keeps briefs, plans, research notes, and run records in the repository so work stays local, durable, and easy to audit.
 
-- `GEMINI.md`: Primary Gemini CLI context for this workspace.
-- `AGENTS.md`: Compatibility map for Codex-style and other AGENTS-aware tools.
-- `docs/briefs/`: Feature briefs that define objective, scope, and acceptance criteria.
-- `docs/exec-plans/`: Execution plans that turn a brief into concrete implementation steps.
-- `.harness/tasks/`: Task metadata that points at the active brief and plan.
-- `.harness/runs/`: Structured run records for implementations and validations.
-- `.harness/episodes/`: Compact summaries of completed work and lessons learned.
-- `docs/reference/PLATFORM_NOTES.md`: Verified platform-specific guidance for Gemini and Codex usage.
-- `src/`: Lightweight harness utilities for logging and validation.
-- `tests/`: Unit tests for repo-local utilities.
+## Structure
+
+```text
+.
+├── GEMINI.md              # Primary Gemini instruction surface
+├── AGENTS.md              # Minimal compatibility pointer
+├── ARCHITECTURE.md        # Structure, data flow, and constraints
+├── SETUP.md               # Bootstrap prompt for adapting the template
+├── .harness/
+│   ├── tasks/             # Task packets linking briefs, plans, and outputs
+│   └── runs/              # Run records for completed research or implementation work
+├── docs/
+│   ├── briefs/            # Research briefs: what to answer and why
+│   └── plans/             # Research plans: how to answer it
+└── research/              # Durable Markdown findings and syntheses
+```
 
 ## Data Flow
 
-1. Define the task in a brief.
-2. Create an execution plan.
-3. Register the task in `.harness/tasks/`.
-4. Implement the change in `src/` and related files.
-5. Validate the change with the smallest meaningful local command.
-6. Persist the execution result in `.harness/runs/`.
-7. Record a short completion summary in `.harness/episodes/`.
+1. Define the question in a brief.
+2. Write a plan for how the research will be done.
+3. Create or update a task packet when structured tracking is useful.
+4. Gather evidence from repo-local material and approved outside sources.
+5. Write the findings to `research/*.md`.
+6. Record the result in `.harness/runs/`.
 
 ## Constraints
 
 - File-based state only.
-- Deterministic local behavior.
-- No external database, queue, or service dependency for harness tracking.
-- Keep root instruction files short; treat `docs/` as the deeper system of record.
-- Prefer platform differences in configuration and docs over branching harness code.
-- Run and episode writers derive a stable base filename and allocate numeric suffixes on collision so prior records remain intact.
-
-## Platform Design
-
-- Gemini strength: hierarchical `GEMINI.md` loading, optional multi-file context via `.gemini/settings.json`, `/memory show`, and skills for on-demand expertise.
-- Codex strength: short `AGENTS.md` as a map into a structured docs tree.
-- Template rule: support both entry points, but keep the harness artifacts and Python utilities platform-neutral.
+- Gemini-first instruction surface.
+- Markdown for human-authored briefs, plans, and research notes.
+- JSON for task packets and run records.
+- No helper code, services, queues, or hidden orchestration.
+- Keep root files short and move durable outputs into `research/`.

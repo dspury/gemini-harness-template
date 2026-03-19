@@ -3,8 +3,8 @@
   "title": "Short task title",
   "status": "ready",
   "brief": "docs/briefs/BRIEF_TEMPLATE.md",
-  "plan": "docs/exec-plans/EXEC_PLAN_TEMPLATE.md",
-  "priority": "medium",
-  "type": "feature",
+  "plan": "docs/plans/PLAN_TEMPLATE.md",
+  "type": "research",
+  "deliverable": "research/YYYY-MM-DD-topic.md",
   "created_at": "YYYY-MM-DD"
 }

@@ -1,23 +1,26 @@
-# Brief: [Task Title]
+# Brief - Title
 
 ## Objective
-State the goal clearly. What problem are we solving?
 
-## Context
-Why is this task necessary? What is the current state?
+State the research outcome this task should deliver.
+
+## Research Questions
+
+- Question 1
+- Question 2
 
 ## Scope
--   In-scope:
-    -   Item 1
-    -   Item 2
--   Out-of-scope:
-    -   Item 3
 
-## Requirements
--   Must handle X.
--   Must output Y.
+- In scope:
+- Out of scope:
+
+## Deliverable
+
+- Target research file, for example `research/YYYY-MM-DD-topic.md`
 
 ## Acceptance Criteria
--   [ ] Feature works as described.
--   [ ] Tests pass.
--   [ ] Documentation updated.
+
+- The research questions are answered or the remaining unknowns are explicit.
+- Sources are cited clearly.
+- Findings are written to `research/`.
+- The validation step is named.

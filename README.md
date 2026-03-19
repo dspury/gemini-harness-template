@@ -1,188 +1,53 @@
-# Gemini Harness Template
+# Gemini Research Harness Template
 
-> A Gemini-first, file-based harness for structured software work.
+A Gemini-first, file-based harness for research-heavy work inside a repository.
 
-It keeps task definition, execution, validation, and review state in the repository instead of hidden agent memory or external services. The template also stays compatible with `AGENTS.md`-oriented tooling such as Codex-style harnesses.
+Use the setup prompt to adapt the template to a real repo. The harness stays local-first, keeps its state in files, and gives Gemini a clear place to put durable research outputs: `research/`.
 
-## Quick Links
+## Quick Start
 
-- [Easy Mode](#easy-mode)
-- [Manual Setup](#manual-setup)
-- [Task Loop](#task-loop)
-- [Key Files](#key-files)
-- [Repository Layout](#repository-layout)
+1. Copy `GEMINI.md`, `AGENTS.md`, `ARCHITECTURE.md`, `SETUP.md`, `.harness/`, `docs/`, and `research/` into the target repo.
+2. Open `SETUP.md`.
+3. Paste the prompt into Gemini CLI.
+4. Let Gemini rewrite the template so it matches the target repo's real structure, tooling, and research workflow.
 
-## At a Glance
+## What's Inside
 
-| Area | Purpose |
+| Path | Purpose |
 | --- | --- |
-| `GEMINI.md` | Primary Gemini workspace instruction file |
-| `AGENTS.md` | Compatibility map for AGENTS-aware tools |
-| `docs/briefs/` | Task briefs |
-| `docs/exec-plans/` | Execution plans |
-| `.harness/` | Task, run, and episode artifacts |
-| `src/` | Small harness utilities |
-| `tests/` | Local validation |
+| `GEMINI.md` | Primary Gemini workspace instructions |
+| `AGENTS.md` | Minimal compatibility pointer for AGENTS-aware tools |
+| `ARCHITECTURE.md` | Stable structure, data flow, and constraints |
+| `SETUP.md` | Bootstrap prompt for adapting the template |
+| `docs/briefs/` | Research briefs |
+| `docs/plans/` | Research plans |
+| `.harness/tasks/` | Task packets linking briefs, plans, and outputs |
+| `.harness/runs/` | Run records for completed work |
+| `research/` | Markdown research notes and final syntheses |
 
-## Easy Mode
+## Research Loop
 
-> Fastest path: copy the template into a working repo, paste one prompt into Gemini, and let it adapt the harness to the real project.
+1. Write a brief in `docs/briefs/`.
+2. Write a plan in `docs/plans/`.
+3. Create or update a task packet in `.harness/tasks/`.
+4. Gather evidence and write the findings to `research/*.md`.
+5. Record the result in `.harness/runs/`.
 
-1. Copy this template into your working project.
-2. Open [`docs/reference/EASY_MODE_SETUP_PROMPT.md`](docs/reference/EASY_MODE_SETUP_PROMPT.md).
-3. Paste the prompt into Gemini (or Codex).
-4. Let the agent adapt the harness to your real repo structure, test commands, and docs.
+## Design Principles
 
-Manual setup is still documented below for teams that want tighter control.
-
-## What You Get
-
-- `GEMINI.md` as the primary Gemini workspace instruction file
-- `AGENTS.md` as a compatibility map for AGENTS-aware tools
-- `docs/briefs/` for task briefs
-- `docs/exec-plans/` for execution plans
-- `.harness/tasks/` for active task packets
-- `.harness/runs/` for run records
-- `.harness/episodes/` for completion summaries
-- `src/` for small harness utilities
-- `tests/` for local validation
-- `LICENSE` with MIT terms
+- Gemini-first: `GEMINI.md` is the instruction entry point.
+- Research-first: durable findings belong in `research/`, not chat history.
+- File-based: no external services, queues, or hidden orchestration.
+- Lean surface: small templates, minimal compatibility files, no helper code.
+- Repo-local: adapt the harness to the actual project instead of keeping boilerplate.
 
 ## Manual Setup
 
-1. Copy this folder to your new project location.
-2. Ensure Python 3 is installed.
-3. Read `GEMINI.md`, `AGENTS.md`, `ARCHITECTURE.md`, and `docs/reference/PLATFORM_NOTES.md`.
-4. Run the baseline validation:
+1. Copy the template into the target repo.
+2. Read `GEMINI.md` and `ARCHITECTURE.md`.
+3. Paste the prompt from `SETUP.md` into Gemini CLI.
+4. After setup, delete `SETUP.md` from the target repo.
 
-```bash
-python3 -m unittest discover -s tests -p 'test_*.py'
-```
+## License
 
-5. If you use Gemini CLI, keep `.gemini/settings.json` in place. It preserves the official `GEMINI.md` entry point and also allows Gemini to load `AGENTS.md`.
-
-## Task Loop
-
-### 1. Create the brief
-
-Copy `docs/briefs/BRIEF_TEMPLATE.md` to a task-specific brief.
-
-The brief should capture:
-- the target outcome
-- why it matters
-- scope and non-scope
-- acceptance criteria
-
-### 2. Create the execution plan
-
-Copy `docs/exec-plans/EXEC_PLAN_TEMPLATE.md` to a task-specific plan.
-
-The plan should capture:
-- the implementation approach
-- likely files to change
-- validation commands
-- key risks
-- completion criteria
-
-### 3. Create the task packet
-
-Copy `.harness/tasks/TASK_TEMPLATE.json` to a task-specific packet in `.harness/tasks/`.
-
-The packet ties together the task ID, brief, and plan so the work can be picked up reproducibly.
-
-### 4. Execute the task
-
-Ask Gemini to read:
-- `GEMINI.md`
-- `AGENTS.md`
-- the task packet
-- the referenced brief
-- the referenced plan
-
-Then implement the smallest viable change that satisfies the task.
-
-### 5. Validate locally
-
-Start with the smallest meaningful command. For the harness itself, use:
-
-```bash
-python3 -m unittest discover -s tests -p 'test_*.py'
-```
-
-If you copy this template into a larger project, prefer the narrowest repo-defined command that proves the change.
-
-### 6. Record the run
-
-After a meaningful validation attempt, write a run record:
-
-```bash
-python3 -c "from src.run_log_writer import write_run_record; write_run_record({'run_id': 'run-example', 'task_id': 'task-000', 'status': 'passed', 'tests_run': ['python3 -m unittest discover -s tests -p test_*.py'], 'files_changed': ['README.md'], 'summary': 'Release readiness validation'})"
-```
-
-Run records are append-safe. If `run-task-000.json` already exists, the writer creates `run-task-000-2.json`, `run-task-000-3.json`, and so on.
-
-### 7. Record completion
-
-When the task is complete and verified, write an episode record:
-
-```bash
-python3 -c "from src.episode_log_writer import write_episode_record; write_episode_record({'episode_id': 'episode-example', 'task_id': 'task-000', 'result': 'completed', 'lesson': 'Keep workspace instructions short and move durable detail into docs.'})"
-```
-
-Episode records use the same append-safe naming rule.
-
-## Key Files
-
-| File | Purpose |
-| --- | --- |
-| `GEMINI.md` | Gemini-first workspace instructions |
-| `AGENTS.md` | Compatibility map for AGENTS-aware tools |
-| `ARCHITECTURE.md` | Stable repo structure and constraints |
-| `docs/reference/EASY_MODE_SETUP_PROMPT.md` | Copy-paste setup prompt for adapting the harness inside a real repo |
-| `docs/reference/PLATFORM_NOTES.md` | Verified Gemini and Codex platform notes |
-| `.gemini/settings.json` | Gemini workspace configuration |
-
-## Repository Layout
-
-```text
-.
-|-- .gemini/settings.json
-|-- .harness/
-|   |-- tasks/
-|   |-- runs/
-|   `-- episodes/
-|-- AGENTS.md
-|-- ARCHITECTURE.md
-|-- GEMINI.md
-|-- README.md
-|-- LICENSE
-|-- docs/
-|   |-- briefs/
-|   |-- exec-plans/
-|   `-- reference/
-|-- src/
-`-- tests/
-```
-
-## Platform Notes
-
-- Gemini CLI officially uses `GEMINI.md` as the default context filename.
-- Gemini CLI can also load alternate or additional filenames through `context.fileName`, which is why this template carries `AGENTS.md` too.
-- OpenAI's published Codex harness guidance uses `AGENTS.md` as a short repo map and pushes deeper operational detail into `docs/`.
-
-This template follows that split:
-- Gemini-first behavior through `GEMINI.md`
-- Codex-friendly compatibility through `AGENTS.md`
-- durable detail in `docs/` instead of large root instruction files
-
-## Gemini Tips
-
-- Use `/memory show` to inspect Gemini's effective merged context.
-- If `AGENTS.md` does not appear in Gemini's context, confirm the workspace is trusted and `.gemini/settings.json` is being applied.
-- Keep `GEMINI.md` short. Use `docs/` for durable detail.
-
-## Release Notes
-
-- The public docs surface is intentionally small. Durable guidance lives in `README.md`, `GEMINI.md`, `AGENTS.md`, `ARCHITECTURE.md`, and `docs/reference/`.
-- The harness utilities use Python standard library modules only.
-- The project is released under the MIT License.
+MIT

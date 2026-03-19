@@ -1,0 +1,12 @@
+{
+  "run_id": "run-000",
+  "task_id": "task-000",
+  "status": "completed",
+  "summary": "Short summary of the research result",
+  "research_outputs": [
+    "research/YYYY-MM-DD-topic.md"
+  ],
+  "sources_consulted": [],
+  "validation": [],
+  "timestamp": "YYYY-MM-DD"
+}
